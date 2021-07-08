@@ -46,4 +46,24 @@ for batch_size in batch_sizes:
         "loss": loss,
         "acc": acc
     })
+
 print(json.dumps(result, indent=4))
+fig=  plt.figure()
+
+def plot(ax):
+    x,y1,y2=zip(*[i.values()for i in result])
+    ax.plot(x,y1,label="loss")
+    ax.plot(x,y2,label="acc")
+    ax.legend()
+    ax.grid()
+
+ax1=fig.add_subplot(1,2,1)
+plot(ax1)
+ax2=fig.add_subplot(1,2,2)
+plot(ax2)
+ax2.set_xscale('log')
+
+plt.savefig("./BkXPcnIoLxz.png")
+
+plt.show()
+
