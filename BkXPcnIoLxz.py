@@ -38,7 +38,8 @@ def main(batch_size: int):
 
 
 result = []
-for batch_size in [16, 32, 64]:
+batch_sizes=[2**i for i in range(4,9)]
+for batch_size in batch_sizes:
     loss, acc = main(batch_size)
     result.append({
         "batch_size": batch_size,
