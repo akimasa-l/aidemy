@@ -1,0 +1,26 @@
+       iso_code continent  ... human_development_index excess_mortality
+0           AFG      Asia  ...                   0.511              NaN
+1           AFG      Asia  ...                   0.511              NaN
+2           AFG      Asia  ...                   0.511              NaN
+3           AFG      Asia  ...                   0.511              NaN
+4           AFG      Asia  ...                   0.511              NaN
+...         ...       ...  ...                     ...              ...
+100915      ZWE    Africa  ...                   0.571              NaN
+100916      ZWE    Africa  ...                   0.571              NaN
+100917      ZWE    Africa  ...                   0.571              NaN
+100918      ZWE    Africa  ...                   0.571              NaN
+100919      ZWE    Africa  ...                   0.571              NaN
+
+[100920 rows x 60 columns]
+World                              218
+Europe                             218
+Norway                             217
+Canada                             206
+North America                      206
+                                  ... 
+Tuvalu                               3
+Tonga                                2
+Pitcairn                             2
+Bonaire Sint Eustatius and Saba      1
+Turkmenistan                         1
+Name: location, Length: 222, dtype: int64
