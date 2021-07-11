@@ -26,6 +26,8 @@ for vaccination in ["total_vaccinations", "people_vaccinated", "people_fully_vac
         america = vaccine.query(f"location==\"{country}\"", engine="numexpr")
         if len(america) == 0:
             continue
+        if (america["human_development_index"]<0.9).all():
+            continue#先進国だけにする
         # print(america)
         # print(type(america))
         america_vaccinations = america.set_index("date")[vaccination]
