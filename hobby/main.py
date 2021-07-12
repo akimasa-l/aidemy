@@ -6,6 +6,11 @@ import numpy as np
 import pandas
 import tqdm
 from sklearn.linear_model import Ridge
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.pipeline import Pipeline
+
+degree = 11  # 三次関数
+
 
 df = pandas.read_csv("./data.csv")
 # print(df)
@@ -15,7 +20,12 @@ df["date"] = pandas.to_datetime(df["date"])
 for vaccination in ["total_vaccinations", "people_vaccinated", "people_fully_vaccinated"]:
     # vaccination = "total_vaccinations"
     vaccine = df.dropna(subset=[vaccination])
-    model = Ridge()
+    polynomial_features = PolynomialFeatures(degree=degree, include_bias=False)
+
+    model = Pipeline(
+        [("polynomial_features", polynomial_features),
+         ("linear_regression", Ridge(alpha=0.01))]
+    )
     # print(vaccine["location"].value_counts())
     # print(vaccine["location"].unique())
 
@@ -26,8 +36,7 @@ for vaccination in ["total_vaccinations", "people_vaccinated", "people_fully_vac
         america = vaccine.query(f"location==\"{country}\"", engine="numexpr")
         if len(america) == 0:
             continue
-        if (america["human_development_index"]<0.9).all():
-            continue#先進国だけにする
+        # if (america["human_development_index"] < 0.9).all():continue  # 先進国だけにする
         # print(america)
         # print(type(america))
         america_vaccinations = america.set_index("date")[vaccination]
@@ -37,24 +46,25 @@ for vaccination in ["total_vaccinations", "people_vaccinated", "people_fully_vac
         # print(type(america_vaccinations.keys().to_numpy()))
 
         # print(america_vaccinations.values)
-        model.fit(america_vaccinations.keys().map(datetime.datetime.toordinal).to_numpy().reshape(-1,1),
+        model.fit(america_vaccinations.keys().map(datetime.datetime.toordinal).to_numpy().reshape(-1, 1),
                   america_vaccinations.values.reshape(-1, 1))
     Japan = vaccine.query("location==\"Japan\"", engine="numexpr")
     Japan_vaccinations = Japan.set_index("date")[vaccination]
     # model.predict(Japan_vaccinations.keys().map(datetime.datetime.toordinal).to_numpy().reshape(-1,1))
-    print(model.score(Japan_vaccinations.keys().map(datetime.datetime.toordinal).to_numpy().reshape(-1,1), Japan_vaccinations.values.reshape(-1, 1)))
-    result=model.predict(Japan_vaccinations.keys().map(datetime.datetime.toordinal).to_numpy().reshape(-1,1)).reshape(1,-1)[0]
+    print(model.score(Japan_vaccinations.keys().map(datetime.datetime.toordinal).to_numpy(
+    ).reshape(-1, 1), Japan_vaccinations.values.reshape(-1, 1)))
+    result = model.predict(Japan_vaccinations.keys().map(
+        datetime.datetime.toordinal).to_numpy().reshape(-1, 1)).reshape(1, -1)[0]
     print(result)
-    fig= plt.figure()
-    ax=fig.add_subplot(1,1,1)
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
     Japan_vaccinations.plot(ax=ax)
     # ax.xaxis.set_major_locator(AutoLocator())
-    ax.plot(Japan_vaccinations.keys().to_numpy(),result,label="estimated")
+    ax.plot(Japan_vaccinations.keys().to_numpy(), result, label="estimated")
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y %m/%d"))
     ax.legend()
     ax.grid()
     plt.title(f"Estimated {vaccination}")
-    plt.savefig(f"./{vaccination}.png")
+    plt.savefig(f"./polynomial-{vaccination}.png")
     # plt.show()
     plt.close()
-
