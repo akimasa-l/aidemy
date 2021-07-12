@@ -35,6 +35,7 @@ for condition in ["total_vaccinations", "people_vaccinated", "people_fully_vacci
     ax.plot(test_x,test_y,label = "estimated_"+condition)
     ax.grid()
     ax.legend()
+    plt.savefig(f"./only-japan-{condition}.png")
     plt.show()
     plt.close()
 
