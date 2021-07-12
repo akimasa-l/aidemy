@@ -33,7 +33,7 @@ for condition in ["total_vaccinations", "people_vaccinated", "people_fully_vacci
 
     # estimate
     test_x = np.arange(
-        start, start+datetime.timedelta(days=140), datetime.timedelta(days=1))
+        start, start+datetime.timedelta(days=200), datetime.timedelta(days=1))
     print(test_x.dtype)
     test_y = pipeline.predict(np.vectorize(
         lambda x: (x-start).days)(test_x).reshape(-1, 1))
